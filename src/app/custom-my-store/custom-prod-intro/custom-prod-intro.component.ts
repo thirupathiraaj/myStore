@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '@spartacus/core';
 import { CurrentProductService } from '@spartacus/storefront';
 import { Observable } from 'rxjs';
-
 @Component({
   selector: 'app-custom-prod-intro',
   templateUrl: './custom-prod-intro.component.html',
@@ -16,5 +15,4 @@ export class CustomProdIntroComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }
