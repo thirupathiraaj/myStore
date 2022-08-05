@@ -1,0 +1,7 @@
+<ng-container *ngIf="cart$ | async as cart">
+    <ng-container *ngIf="entries$ | async as entries">
+        <div class="pt-5 ml-5">
+       <app-custom-order-summary [cart]="cart" class="border-box"></app-custom-order-summary>
+    </div>
+      </ng-container>
+      </ng-container>

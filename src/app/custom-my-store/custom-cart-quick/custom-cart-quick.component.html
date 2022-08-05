@@ -1,0 +1,45 @@
+<div class="border-box pt-1 ml-5">
+<ng-container *ngIf="cart$ | async as cart">
+        <div class="col">
+    <h3 class="custom-cart-title">
+        Quick Order
+    </h3>
+    <div class="form-group">
+      <form (ngSubmit)="applyQuickOrder()" [formGroup]="quickOrderForm">
+        <div class="cx-cart-quick-order-form-container">
+            <div class="detail-box">
+          <div class="cx-cart-quick-order-form-productID">
+            <label class="cx-cart-quick-order-form-label">
+                Product ID
+            </label>
+            <input
+              aria-required="true"
+              class="form-control input-product-code"
+              formControlName="productCode"
+              placeholder="Product No"
+              type="text"
+            />
+        </div>
+  
+          <div class="cx-cart-quick-order-form-qty">
+            <label class="cx-cart-quick-order-form-label">
+                Qty
+            </label>
+            <input
+              aria-required="true"
+              class="form-control input-quantity"
+              formControlName="quantity"
+              type="number"
+            />
+        </div></div>
+          <button
+            [class.disabled]="cartIsLoading$ | async"
+            [disabled]="cartIsLoading$ | async"
+            class="btn btn-block btn-action apply-quick-order-button"
+            type="submit">
+            add
+          </button>
+         
+        </div>
+      </form></div></div>
+    </ng-container></div>
