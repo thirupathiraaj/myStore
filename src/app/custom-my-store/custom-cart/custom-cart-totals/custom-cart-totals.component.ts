@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Event, NavigationCancel, NavigationEnd, Router } from '@angular/router';
 import { ActiveCartService, Cart, OrderEntry } from '@spartacus/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-custom-cart-totals',
@@ -13,14 +14,31 @@ export class CustomCartTotalsComponent implements OnInit {
   entries$: Observable<OrderEntry[]> = this.activeCartService.getEntries();
   myEntries: any;
 
-  constructor(protected activeCartService: ActiveCartService) { }
+  cartValidationInProgress = false;
+  protected subscription = new Subscription();
+
+  constructor(protected activeCartService: ActiveCartService, protected router?: Router) { }
 
   ngOnInit(): void {
-    //this.cart$ = this.activeCartService.getActive();
-   // this.entries$ = this.activeCartService.getEntries()
-    //  .pipe(filter((entries: string | any[]) => entries.length > 0))
-    //  .subscribe((val:any)=>{this.myEntries = val; console.log(val)})
+       this.subscription.add(
+      this.router?.events.subscribe((event: Event) => {
+        if (
+          event instanceof NavigationEnd ||
+          event instanceof NavigationCancel
+        ) {
+          this.cartValidationInProgress = false;
+        }
+      })
+    );
     
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  disableButtonWhileNavigation(): void {
+    this.cartValidationInProgress = true;
   }
 
 }

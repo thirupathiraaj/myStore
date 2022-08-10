@@ -1,7 +1,8 @@
-<div class="border-box pt-1 ml-5">
+<div class="pt-3 ml-5">
 <ng-container *ngIf="cart$ | async as cart">
+  <div class="border-box">
         <div class="col">
-    <h3 class="custom-cart-title">
+    <h3 class="custom-cart-title pt-3">
         Quick Order
     </h3>
     <div class="form-group">
@@ -34,12 +35,21 @@
         </div></div>
           <button
             [class.disabled]="cartIsLoading$ | async"
-            [disabled]="cartIsLoading$ | async"
+            [disabled]="quickOrderForm.invalid"
             class="btn btn-block btn-action apply-quick-order-button"
             type="submit">
             add
           </button>
-         
+          <cx-form-errors
+          aria-live="assertive"
+          aria-atomic="true"
+          [control]="quickOrderForm.get('productCode')"
+        ></cx-form-errors>
+        <cx-form-errors
+          aria-live="assertive"
+          aria-atomic="true"
+          [control]="quickOrderForm.get('quantity')"
+        ></cx-form-errors>
         </div>
-      </form></div></div>
+      </form></div></div></div>
     </ng-container></div>

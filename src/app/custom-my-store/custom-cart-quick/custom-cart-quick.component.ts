@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActiveCartService, Cart, CartAddEntryFailEvent, CartAddEntrySuccessEvent, EventService, GlobalMessageService, GlobalMessageType } from '@spartacus/core';
 import { Observable, Subscription } from 'rxjs';
@@ -7,9 +7,10 @@ import { map, first } from 'rxjs/operators';
 @Component({
   selector: 'app-custom-cart-quick',
   templateUrl: './custom-cart-quick.component.html',
-  styleUrls: ['./custom-cart-quick.component.scss']
+  styleUrls: ['./custom-cart-quick.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomCartQuickComponent implements OnInit {
+export class CustomCartQuickComponent implements OnInit, OnDestroy {
 
   quickOrderForm: FormGroup | any;
   cartIsLoading$: Observable<boolean> = this.activeCartService.isStable()
@@ -57,7 +58,7 @@ export class CustomCartQuickComponent implements OnInit {
 
   protected buildForm(): void {
     this.quickOrderForm = this.formBuilder.group({
-      productCode: ['', [Validators.required]],
+      productCode: ['', [Validators.required,Validators.minLength(7)]],
       quantity: [
         this.minQuantityValue,
         { updateOn: 'blur', validators: [Validators.required] },
