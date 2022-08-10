@@ -1,21 +1,30 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CmsConfig, ConfigModule, TranslatePipe } from '@spartacus/core';
+import { CmsConfig, ConfigModule, provideDefaultConfig, TranslatePipe, UrlModule } from '@spartacus/core';
 import { CustomCartTotalsComponent } from './custom-cart-totals/custom-cart-totals.component';
 import { CustomOrderSummaryComponent } from '../custom-order-summary/custom-order-summary.component';
-import { ProgressButtonModule } from '@spartacus/storefront';
+import { CarouselModule, FormErrorsModule, IconModule, MediaModule, ProductReferencesComponent, ProgressButtonModule } from '@spartacus/storefront';
 import { CustomApplyCouponComponent } from '../custom-apply-coupon/custom-apply-coupon.component';
-import { CustomCartQuickComponent } from '../custom-cart-quick/custom-cart-quick.component';
+import { RouterModule } from '@angular/router';
+import { CustomCarasoulComponent } from '../custom-carasoul/custom-carasoul.component';
+import { CustomMediaComponent } from '../custom-media/custom-media.component';
+import { CustomCarasoulChildComponent } from '../custom-carasoul-child/custom-carasoul-child.component';
 
 
 @NgModule({
   declarations: [
     CustomCartTotalsComponent,
     CustomOrderSummaryComponent,
+    CustomCarasoulComponent,
+    CustomMediaComponent,
+    CustomCarasoulChildComponent
   ],
   imports: [
     CommonModule,
     ProgressButtonModule,
+    MediaModule,
+    IconModule,
+    CarouselModule, CarouselModule, MediaModule, RouterModule, UrlModule,
     ConfigModule.withConfig({
       cmsComponents: {
         CartTotalsComponent: {
@@ -24,14 +33,19 @@ import { CustomCartQuickComponent } from '../custom-cart-quick/custom-cart-quick
         OrderSummaryComponent: {
           component:CustomOrderSummaryComponent
         },
-        CartApplyCouponComponent1: {
+        CartApplyCouponComponent: {
           component: CustomApplyCouponComponent
         },
-        CartQuickOrderFormComponent: {
-          component: CustomCartQuickComponent
+       // CartQuickOrderFormComponent: {
+      //    component: CustomCartQuickComponent
+      //  },
+        ImportExportOrderEntriesComponent: {
+          component:CustomCarasoulComponent
         }
+
       }
     } as CmsConfig)
-  ]
+  ],
+  
 })
 export class CustomCartModule { }

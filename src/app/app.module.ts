@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { CustomCartModule } from "./custom-my-store/custom-cart/custom-cart.module";
 import { CustomMyStoreModule } from "./custom-my-store/custom-my-store.module";
 import { SpartacusModule } from './spartacus/spartacus.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CustomCartQuickModule } from './custom-my-store/custom-cart-quick/custom-cart-quick.module';
 @NgModule({
   declarations: [
     AppComponent
@@ -20,7 +22,9 @@ import { SpartacusModule } from './spartacus/spartacus.module';
     EffectsModule.forRoot([]),
     SpartacusModule,
     CustomMyStoreModule,
-    CustomCartModule
+    CustomCartModule,
+    BrowserAnimationsModule,
+    CustomCartQuickModule
   ],
   providers: [],
   bootstrap: [AppComponent]

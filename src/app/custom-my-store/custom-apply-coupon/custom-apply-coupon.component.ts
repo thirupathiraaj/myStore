@@ -12,11 +12,11 @@ import {map,tap} from 'rxjs/operators'
 export class CustomApplyCouponComponent implements OnInit, OnDestroy {
 
   MAX_CUSTOMER_COUPON_PAGE = 100;
-  couponForm!: FormGroup;
+  couponForm: FormGroup | any;
   cartIsLoading$: Observable<boolean> | any;
   cart$: Observable<Cart> | any;
   cartId: string | any;
-  applicableCoupons: CustomerCoupon[] = [];
+  applicableCoupons: CustomerCoupon[] | any;
 
   protected ignoreCloseEvent = false;
 
@@ -52,11 +52,51 @@ this.cart$ = combineLatest([
       CustomerCouponSearchResult
     ]) => {
       this.cartId = activeCardId;
-     // this.getApplicableCustomerCoupons(cart, customerCoupons.coupons?.values);
+      this.getApplicableCustomerCoupons(cart,customerCoupons.coupons!);
     }
   ),
   map(([cart]: [Cart, string, CustomerCouponSearchResult]) => cart)
 );
+this.cartIsLoading$ = this.activeCartService
+      .isStable()
+      .pipe(map((loaded) => !loaded));
+
+
+    this.couponForm = this.formBuilder.group({
+      couponCode: ['', [Validators.required]],
+    });
+
+    this.subscription.add(
+      this.cartVoucherService
+        .getAddVoucherResultSuccess()
+        .subscribe((success) => {
+          this.onSuccess(success);
+        })
+    );
+
+    // TODO(#7241): Replace process subscriptions with event listeners and drop process for ADD_VOUCHER
+    this.subscription.add(
+      this.cartVoucherService.getAddVoucherResultError().subscribe((error) => {
+        this.onError(error);
+      })
+    );
+
+  }
+
+  protected onError(error: boolean) {
+    if (error) {
+      this.customerCouponService.loadCustomerCoupons(
+        this.MAX_CUSTOMER_COUPON_PAGE
+      );
+     this.cartVoucherService.resetAddVoucherProcessingState();
+    }
+  }
+
+  onSuccess(success: boolean) {
+    if (success) {
+      this.couponForm.reset();
+    this.cartVoucherService.resetAddVoucherProcessingState();
+    }
   }
 
   protected getApplicableCustomerCoupons(
@@ -67,14 +107,48 @@ this.cart$ = combineLatest([
     if (cart.appliedVouchers) {
       cart.appliedVouchers.forEach((appliedVoucher) => {
         this.applicableCoupons = this.applicableCoupons.filter(
-          (coupon) => coupon.couponId !== appliedVoucher.code
+          (coupon: { couponId: string | undefined; }) => coupon.couponId !== appliedVoucher.code
         );
       });
     }
   }
 
+  applyVoucher(): void {
+    if (this.couponForm.valid) {
+      this.cartVoucherService.addVoucher(
+        this.couponForm.value.couponCode,
+        this.cartId
+      );
+    } else {
+      this.couponForm.markAllAsTouched();
+    }
+  }
+
+  applyCustomerCoupon(couponId: string): void {
+    this.cartVoucherService.addVoucher(couponId, this.cartId);
+    this.couponBoxIsActive = false;
+  }
+
+  close(event: UIEvent): void {
+    if (!this.ignoreCloseEvent) {
+      this.couponBoxIsActive = false;
+      if (event && event.target) {
+        (<HTMLElement>event.target).blur();
+      }
+    }
+    this.ignoreCloseEvent = false;
+  }
+
+  disableClose(): void {
+    this.ignoreCloseEvent = true;
+  }
+
+
 ngOnDestroy(): void {
-  throw new Error('Method not implemented.');
+  if (this.subscription) {
+    this.subscription.unsubscribe();
+  }
+  this.cartVoucherService.resetAddVoucherProcessingState();
 }
 
 }
