@@ -1,1 +1,13 @@
-<p>custom-carasoul works!</p>
+<div class="row">
+  
+  <div class="col-md-4" *ngFor="let item of myProds">
+   <a [routerLink]="['/', 'p', item.target?.code]">
+   <div class="text-center">
+<img [src]="baseURL+item.target?.images[2].url" />
+
+<p>{{item.target.name}}</p>
+<p> {{item.target?.price?.formattedValue}} </p>
+  </div></a>
+</div>
+
+</div>
